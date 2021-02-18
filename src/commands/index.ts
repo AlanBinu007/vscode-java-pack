@@ -15,6 +15,7 @@ import { showClasspathConfigurationPage } from "../classpath/classpathConfigurat
 import { markdownPreviewProvider } from "../classpath/markdownPreviewProvider";
 import { getExpService } from "../exp";
 import { TreatmentVariables } from "../exp/TreatmentVariables";
+import { JavaFormatterSettingsEditorProvider } from "../formatter-settings";
 
 export function initialize(context: vscode.ExtensionContext) {
   context.subscriptions.push(vscode.commands.registerCommand("java.overview", instrumentCommand(context, "java.overview", instrumentCommand(context, "java.helper.overview", overviewCmdHandler))));
@@ -42,4 +43,8 @@ export function initialize(context: vscode.ExtensionContext) {
       markdownPreviewProvider.show(context.asAbsolutePath(path.join("webview-resources", "classpathConfiguration.md")), "Classpath Settings", context);
     }
   }));
+  context.subscriptions.push(vscode.commands.registerCommand("java.classpathConfiguration", () => showClasspathConfigurationPage(context)));
+  const javaFormatterSettingsEditorProvider: JavaFormatterSettingsEditorProvider = new JavaFormatterSettingsEditorProvider(context);
+  context.subscriptions.push(vscode.window.registerCustomEditorProvider(JavaFormatterSettingsEditorProvider.viewType, javaFormatterSettingsEditorProvider));
+  context.subscriptions.push(vscode.commands.registerCommand("java.formatterSettings", () => javaFormatterSettingsEditorProvider.showFormatterSettingsEditor()));
 }
