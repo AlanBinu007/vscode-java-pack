@@ -3,7 +3,7 @@
   "displayName": "Java Extension Pack",
   "description": "Popular extensions for Java development and more.",
   "license": "MIT",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "publisher": "vscjava",
   "preview": true,
   "engines": {
@@ -49,8 +49,7 @@
     "onCommand:java.classpathConfiguration",
     "onWebviewPanel:java.classpathConfiguration",
     "onWebviewPanel:java.markdownPreview",
-    "onCommand:java.formatterSettings",
-    "onWebviewPanel:java.formatterSettings"
+    "onCommand:java.formatterSettings"
   ],
   "contributes": {
     "commands": [
@@ -91,7 +90,8 @@
       },
       {
         "command": "java.formatterSettings",
-        "title": "Java: Formatter Settings Page"
+        "category": "Java",
+        "title": "Formatter Settings Page"
       }
     ],
     "configuration": {

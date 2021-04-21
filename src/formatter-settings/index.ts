@@ -124,6 +124,12 @@ export class JavaFormatterSettingsEditorProvider implements vscode.CustomTextEdi
         }
     }
 
+    private async applyFakeEdit(document: vscode.TextDocument) {
+        const edit: vscode.WorkspaceEdit = new vscode.WorkspaceEdit();
+        edit.insert(document.uri, new vscode.Position(0, 0), "insert");
+        vscode.workspace.applyEdit(edit);
+    }
+
     /*private findJavaSpecificSetting(setting: string): string | boolean | number | undefined {
         const config = vscode.workspace.getConfiguration().get<Object>("[java]");
         if (!config) {
@@ -219,7 +225,7 @@ export class JavaFormatterSettingsEditorProvider implements vscode.CustomTextEdi
                         command: "VSCodeToWebview.formattedCode",
                         content: content,
                     });
-                    // this.applyFormatterSettings(document);
+                    this.applyFakeEdit(document);
                     break;
                 }
                 case "WebviewToVSCode.applyChanges": {
