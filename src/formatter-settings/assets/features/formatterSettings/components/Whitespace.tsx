@@ -3,7 +3,7 @@
 
 import React from "react";
 import { useSelector } from "react-redux";
-import { Catagory, JavaFormatterSetting } from "../../../../FormatterConstants";
+import { Catagory, JavaFormatterSetting } from "../../../../types";
 import Setting from "./Setting";
 
 const WhiteSpace = (): JSX.Element => {

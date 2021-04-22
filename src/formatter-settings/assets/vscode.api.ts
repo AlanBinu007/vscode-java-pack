@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
-import { ExampleKind } from "../FormatterConstants";
+import { ExampleKind } from "../types";
 
 declare function acquireVsCodeApi(): any;
 const vscode = acquireVsCodeApi();
@@ -18,11 +18,5 @@ export function changeSetting(id: string, value: any) {
     command: "WebviewToVSCode.changeSetting",
     id: id,
     value: value,
-  });
-}
-
-export function applyChanges() {
-  vscode.postMessage({
-    command: "WebviewToVSCode.applyChanges",
   });
 }

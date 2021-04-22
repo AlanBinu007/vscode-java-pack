@@ -306,6 +306,7 @@ code.hljs {
 
 .hljs {
   font-size: medium;
+  tab-size: var(--vscode-tab-size);
   overflow: hidden !important;
   &:hover {
     overflow: auto !important;

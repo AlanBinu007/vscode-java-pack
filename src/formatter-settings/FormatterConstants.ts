@@ -1,6 +1,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT license.
 
+import { Catagory, ExampleKind, JavaFormatterSetting, ValueKind } from "./types";
+
 export namespace JavaConstants {
   export const SETTINGS_URL_KEY = "format.settings.url";
   export const SETTINGS_PROFILE_KEY = "format.settings.profile";
@@ -10,35 +12,6 @@ export namespace JavaConstants {
   export const JAVA_CORE_FORMATTER_ID = "org.eclipse.jdt.core.formatter";
 }
 
-export interface JavaFormatterSetting {
-  id: string;
-  name?: string;
-  value: string;
-  candidates?: string[];
-  catagory: Catagory;
-  exampleKind: ExampleKind;
-  valueKind?: ValueKind;
-  // the first profile version the setting becomes valid, default is 1.
-  startVersion: number;
-  // the first profile version the settings becomes deprecated, if undefined, the setting is valid in the current version.
-  deprecatedVersion?: number;
-}
-
-export enum ValueKind {
-  Boolean,
-  Number,
-  Enum,
-}
-
-export enum Catagory {
-  Common,
-  Whitespace,
-  Comment,
-  Wrapping,
-  Newline,
-  Blankline,
-  UnSupported
-}
 export namespace SupportedSettings {
 
   // Common
@@ -239,25 +212,13 @@ export namespace SupportedSettings {
   ];
 }
 
-export enum ExampleKind {
-  COMMON_EXAMPLE,
-  BLANKLINE_EXAMPLE,
-  COMMENT_EXAMPLE,
-  NEWLINE_EXAMPLE,
-  BRACED_CODE_EXAMPLE,
-  ANNOTATION_AND_ANONYMOUS_EXAMPLE,
-  WHITESPACE_EXAMPLE,
-  WRAPPING_EXAMPLE,
-}
-
 export class ExampleManager {
-
   private static COMMON_EXAMPLE = "package com.example;\n" +
     "\n" +
     "class Example {\n" +
-    "    int[] myArray = { 1, 2, 3, 4, 5, 6 };\n" +
-    "    String stringWithTabs = \"1	2	3	4\";\n" +
-    "    String textBlock = \"\"\"\n" +
+    "\tint[] myArray = { 1, 2, 3, 4, 5, 6 };\n" +
+    "\tString stringWithTabs = \"1	2	3	4\";\n" +
+    "\tString textBlock = \"\"\"\n" +
     "first line\n" +
     "\n" +
     "second line\n" +
@@ -272,19 +233,19 @@ export class ExampleManager {
     "import org.eclipse.jdt.core.dom.ASTParser;\n" +
     "\n" +
     "public class Example {\n" +
-    "    public interface ExampleProvider {\n" +
-    "        Example getExample();\n" +
-    "        // Between here...\n" +
+    "\tpublic interface ExampleProvider {\n" +
+    "\t\tExample getExample();\n" +
+    "\t\t// Between here...\n" +
     "\n" +
     "\n" +
     "\n" +
-    "        // and here are 3 blank lines\n" +
-    "        List<Example> getManyExamples();\n" +
-    "    }\n" +
+    "\t\t// and here are 3 blank lines\n" +
+    "\t\tList<Example> getManyExamples();\n" +
+    "\t}\n" +
     "\n" +
-    "    public class Foo {\n" +
-    "        int a;\n" +
-    "    }\n" +
+    "\tpublic class Foo {\n" +
+    "\t\tint a;\n" +
+    "\t}\n" +
     "}\n" +
     "class Another {\n" +
     "\n" +
@@ -296,49 +257,49 @@ export class ExampleManager {
     "package mypackage;\n" +
     "\n" +
     "interface Example {\n" +
-    "    /*\n" +
-    "     *\n" +
-    "     *block comment          on first column\n" +
-    "     */\n" +
-    "    int bar();\n" +
+    "\t/*\n" +
+    "\t *\n" +
+    "\t *block comment          on first column\n" +
+    "\t */\n" +
+    "\tint bar();\n" +
     "\n" +
-    "    /**\n" +
-    "     *\n" +
-    "     *\n" +
-    "     *\n" +
-    "     * Descriptions of parameters and return values are best appended at end of the javadoc comment.\n" +
-    "     * @param first The first parameter. For an optimum result, this should be an odd number between 0 and 100.\n" +
-    "     * @param second The second parameter.\n" +
-    "     * @return The result of the foo operation, usually an even number within 0 and 1000.\n" +
-    "     */ int foo(int first, int second);\n" +
+    "\t/**\n" +
+    "\t *\n" +
+    "\t *\n" +
+    "\t *\n" +
+    "\t * Descriptions of parameters and return values are best appended at end of the javadoc comment.\n" +
+    "\t * @param first The first parameter. For an optimum result, this should be an odd number between 0 and 100.\n" +
+    "\t * @param second The second parameter.\n" +
+    "\t * @return The result of the foo operation, usually an even number within 0 and 1000.\n" +
+    "\t */ int foo(int first, int second);\n" +
     "// This is a long comment that should be split in multiple line comments in case the line comment formatting is enabled\n" +
-    "     int foo2();\n" +
-    "     // @formatter:off\n" +
-    "     void method2(int     a,   int   b);\n" +
-    "     // @formatter:on\n" +
+    "\t int foo2();\n" +
+    "\t // @formatter:off\n" +
+    "\t void method2(int     a,   int   b);\n" +
+    "\t // @formatter:on\n" +
     "}\n";
 
   private static NEWLINE_EXAMPLE = "@Deprecated package com.example;\n" +
     "class Example {\n" +
-    "    static int [] fArray= {1, 2, 3, 4, 5 };\n" +
+    "\tstatic int [] fArray= {1, 2, 3, 4, 5 };\n" +
     // eslint-disable-next-line @typescript-eslint/quotes
-    `    void bar(@SuppressWarnings("unused") int i) {\n` +
-    "        do { } while (true);\n" +
-    "        try { } catch (Exception e) { } finally { }\n" +
-    "        if (true) { return; } else if (false) { return; }\n" +
-    "        ;;\n" +
-    "    }\n" +
+    `\tvoid bar(@SuppressWarnings("unused") int i) {\n` +
+    "\t\tdo { } while (true);\n" +
+    "\t\ttry { } catch (Exception e) { } finally { }\n" +
+    "\t\tif (true) { return; } else if (false) { return; }\n" +
+    "\t\t;;\n" +
+    "\t}\n" +
     "}\n" +
-    "enum MyEnum {    @Deprecated UNDEFINED(0) { }}\n";
+    "enum MyEnum {\t@Deprecated UNDEFINED(0) { }}\n";
 
   private static BRACED_CODE_EXAMPLE = "public class EmptyClass {}\n" +
     "public class TinyClass {\n" +
-    "    int a;}\n" +
+    "\tint a;}\n" +
     "public class SmallClass {int a; String b;\n" +
-    "    public void doNoting() {}\n" +
-    "    public void doOneThing() { System.out.println();\n" +
-    "    }\n" +
-    "    public void doMoreThings() { something = 4; doOneThing(); doOneThing(); }\n" +
+    "\tpublic void doNoting() {}\n" +
+    "\tpublic void doOneThing() { System.out.println();\n" +
+    "\t}\n" +
+    "\tpublic void doMoreThings() { something = 4; doOneThing(); doOneThing(); }\n" +
     "}\n" + 
     "\n" +
     "public enum EmptyEnum {}\n" +
@@ -347,23 +308,23 @@ export class ExampleManager {
     "public enum SmallEnum{ VALUE(0); SmallEnum(int val) {}; }\n" +
     "\n" +
     "public enum EnumConstants {\n" +
-    "    EMPTY {\n" +
-    "    },\n" +
-    "    TINY { int getVal() { return 2; }},\n" +
-    "    SMALL { int val = 3; int getVal() { return 3; }};\n" +
-    "    int getVal() { return 1; }\n" +
+    "\tEMPTY {\n" +
+    "\t},\n" +
+    "\tTINY { int getVal() { return 2; }},\n" +
+    "\tSMALL { int val = 3; int getVal() { return 3; }};\n" +
+    "\tint getVal() { return 1; }\n" +
     "}\n";
 
   private static ANNOTATION_AND_ANONYMOUS_EXAMPLE = "public @interface EmptyInterface {}\n" +
     "public @interface TinyInterface {\n" +
-    "    void run(); }\n" +
+    "\tvoid run(); }\n" +
     "public @interface SmallInteface { int toA(); String toB(); }\n" +
     "\n" +
     "public class AnonymousClasses {\n" +
-    "    EmptyClass emptyAnonymous = new EmptyClass() {\n" +
-    "    };\n" +
-    "    TinyClass tinyAnonymous = new TinyClass() { String b; };\n" +
-    "    Object o = new SmallClass() { int a; int getA() { return a; } };\n" +
+    "\tEmptyClass emptyAnonymous = new EmptyClass() {\n" +
+    "\t};\n" +
+    "\tTinyClass tinyAnonymous = new TinyClass() { String b; };\n" +
+    "\tObject o = new SmallClass() { int a; int getA() { return a; } };\n" +
     "}\n";
 
   private static WHITESPACE_EXAMPLE = "package example;\n" +
@@ -377,10 +338,10 @@ export class ExampleManager {
 
   private static WRAPPING_EXAMPLE = "public class Example {\n" +
     "\n" +
-    "    public List<Integer> list = Arrays.asList(\n" +
-    "        111111, 222222, 333333,\n" +
-    "        444444, 555555, 666666,\n" +
-    "        777777, 888888, 999999, 000000);\n" +
+    "\tpublic List<Integer> list = Arrays.asList(\n" +
+    "\t\t111111, 222222, 333333,\n" +
+    "\t\t444444, 555555, 666666,\n" +
+    "\t\t777777, 888888, 999999, 000000);\n" +
     "}\n";
 
   public static getExample(example: ExampleKind): string {
@@ -405,4 +366,607 @@ export class ExampleManager {
         return "";
     }
   }
+}
+
+export function initializeSupportedVSCodeSettings(): JavaFormatterSetting[] {
+  const settings: JavaFormatterSetting[] = [];
+
+  settings.push({
+    id: SupportedSettings.TABULATION_CHAR,
+    name: "Tab Policy",
+    valueKind: ValueKind.Enum,
+    candidates: ["tab", "space"],
+    value: "tab",
+    catagory: Catagory.Common,
+    exampleKind: ExampleKind.COMMON_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.TABULATION_SIZE,
+    name: "Tab Size",
+    valueKind: ValueKind.Number,
+    value: "4",
+    catagory: Catagory.Common,
+    exampleKind: ExampleKind.COMMON_EXAMPLE,
+    startVersion: 1,
+  });
+
+  return settings;
+}
+
+export function initializeSupportedProfileSettings(version: number): JavaFormatterSetting[] {
+  const settings: JavaFormatterSetting[] = [];
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_IN_CONTROL_STATEMENTS,
+    name: "In control statements",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 6
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_BEFORE_WHILE_IN_DO_STATEMENT,
+    name: "Before 'while' in a 'do' statement",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 6,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_BEFORE_FINALLY_IN_TRY_STATEMENT,
+    name: "Before 'finally' in a 'try' statement",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 6,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_BEFORE_ELSE_IN_IF_STATEMENT,
+    name: "Before 'else' in an 'if' statement",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 6,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_BEFORE_CATCH_IN_TRY_STATEMENT,
+    name: "Before 'catch' in a 'try' statement",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 6,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_BEFORE_CLOSING_BRACE_IN_ARRAY_INITIALIZER,
+    name: "Before closing brace of array initializer",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_AFTER_OPENING_BRACE_IN_ARRAY_INITIALIZER,
+    name: "After opening brace of array initializer",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_AFTER_ANNOTATION,
+    name: "After annotation",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 12,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_AFTER_ANNOTATION_ON_PARAMETER,
+    name: "After annotation on parameters",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 12,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_AFTER_ANNOTATION_ON_PACKAGE,
+    name: "After annotation on packages",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 12,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_AFTER_ANNOTATION_ON_ENUM_CONSTANT,
+    name: "After annotation on enum constants",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.PUT_EMPTY_STATEMENT_ON_NEW_LINE,
+    name: "Before empty statement",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.NEWLINE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_IN_EMPTY_TYPE_DECLARATION,
+    name: "In empty class declaration",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.BRACED_CODE_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.KEEP_TYPE_DECLARATION_ON_ONE_LINE,
+    name: "For class declaration",
+    valueKind: ValueKind.Enum,
+    candidates: ["Never", "If empty", "If at most one item", "If fits in width limit", "Preserve state"],
+    value: "Never",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.BRACED_CODE_EXAMPLE,
+    startVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.KEEP_RECORD_DECLARATION_ON_ONE_LINE,
+    name: "For record declaration",
+    valueKind: ValueKind.Enum,
+    candidates: ["Never", "If empty", "If at most one item", "If fits in width limit", "Preserve state"],
+    value: "Never",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.BRACED_CODE_EXAMPLE,
+    startVersion: 19,
+  });
+
+  settings.push({
+    id: SupportedSettings.KEEP_RECORD_CONSTRUCTOR_ON_ONE_LINE,
+    name: "For record constructor",
+    valueKind: ValueKind.Enum,
+    candidates: ["Never", "If empty", "If at most one item", "If fits in width limit", "Preserve state"],
+    value: "Never",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.BRACED_CODE_EXAMPLE,
+    startVersion: 19,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_IN_EMPTY_METHOD_BODY,
+    name: "In empty method body",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.BRACED_CODE_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.KEEP_METHOD_BODY_ON_ONE_LINE,
+    name: "For method body",
+    valueKind: ValueKind.Enum,
+    candidates: ["Never", "If empty", "If at most one item", "If fits in width limit", "Preserve state"],
+    value: "Never",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.BRACED_CODE_EXAMPLE,
+    startVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_IN_EMPTY_ENUM_DECLARATION,
+    name: "In empty enum declaration",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.BRACED_CODE_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.KEEP_ENUM_DECLARATION_ON_ONE_LINE,
+    name: "For enum declaration",
+    valueKind: ValueKind.Enum,
+    candidates: ["Never", "If empty", "If at most one item", "If fits in width limit", "Preserve state"],
+    value: "Never",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.BRACED_CODE_EXAMPLE,
+    startVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_IN_EMPTY_ENUM_CONSTANT,
+    name: "In empty enum constant",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.BRACED_CODE_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.KEEP_ENUM_CONSTANT_DECLARATION_ON_ONE_LINE,
+    name: "For enum constant declaration",
+    valueKind: ValueKind.Enum,
+    candidates: ["Never", "If empty", "If at most one item", "If fits in width limit", "Preserve state"],
+    value: "Never",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.BRACED_CODE_EXAMPLE,
+    startVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_IN_EMPTY_ANONYMOUS_TYPE_DECLARATION,
+    name: "In empty anonymous type declaration",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.ANNOTATION_AND_ANONYMOUS_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.KEEP_ANONYMOUS_TYPE_DECLARATION_ON_ONE_LINE,
+    name: "For anonymous type declaration",
+    valueKind: ValueKind.Enum,
+    candidates: ["Never", "If empty", "If at most one item", "If fits in width limit", "Preserve state"],
+    value: "Never",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.ANNOTATION_AND_ANONYMOUS_EXAMPLE,
+    startVersion: 15
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_NEW_LINE_IN_EMPTY_ANNOTATION_DECLARATION,
+    name: "In empty annotation declaration",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.ANNOTATION_AND_ANONYMOUS_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.KEEP_ANNOTATION_DECLARATION_ON_ONE_LINE,
+    name: "For annotation declaration",
+    valueKind: ValueKind.Enum,
+    candidates: ["Never", "If empty", "If at most one item", "If fits in width limit", "Preserve state"],
+    value: "Never",
+    catagory: Catagory.Newline,
+    exampleKind: ExampleKind.ANNOTATION_AND_ANONYMOUS_EXAMPLE,
+    startVersion: 15,
+  });
+
+  settings.push({
+    id: SupportedSettings.BLANK_LINES_BETWEEN_TYPE_DECLARATIONS,
+    name: "Between class declarations",
+    valueKind: ValueKind.Number,
+    value: "1",
+    catagory: Catagory.Blankline,
+    exampleKind: ExampleKind.BLANKLINE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.BLANK_LINES_BETWEEN_IMPORT_GROUPS,
+    name: "Between import groups",
+    valueKind: ValueKind.Number,
+    value: "1",
+    catagory: Catagory.Blankline,
+    exampleKind: ExampleKind.BLANKLINE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.BLANK_LINES_BEFORE_PACKAGE,
+    name: "Before package declarations",
+    valueKind: ValueKind.Number,
+    value: "0",
+    catagory: Catagory.Blankline,
+    exampleKind: ExampleKind.BLANKLINE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.BLANK_LINES_BEFORE_IMPORTS,
+    name: "Before import declarations",
+    valueKind: ValueKind.Number,
+    value: "1",
+    catagory: Catagory.Blankline,
+    exampleKind: ExampleKind.BLANKLINE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.BLANK_LINES_BEFORE_MEMBER_TYPE,
+    name: "Between member type declarations",
+    valueKind: ValueKind.Number,
+    value: "1",
+    catagory: Catagory.Blankline,
+    exampleKind: ExampleKind.BLANKLINE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.NUMBER_OF_EMPTY_LINES_TO_PRESERVE,
+    name: "Preserve empty lines",
+    valueKind: ValueKind.Number,
+    value: "1",
+    catagory: Catagory.Blankline,
+    exampleKind: ExampleKind.BLANKLINE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.LINESPLIT,
+    name: "Maximum line width",
+    valueKind: ValueKind.Number,
+    value: "120",
+    catagory: Catagory.Wrapping,
+    exampleKind: ExampleKind.WRAPPING_EXAMPLE,
+    startVersion: 1
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_LINELENGTH,
+    name: "Maximum comment line length",
+    valueKind: ValueKind.Number,
+    value: "80",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 7
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_LINE_LENGTH,
+    name: "Maximum comment line length",
+    valueKind: ValueKind.Number,
+    value: "80",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 7,
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_INDENTPARAMETERDESCRIPTION,
+    name: "Indent wrapped parameter description",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 7,
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_INDENT_PARAMETER_DESCRIPTION,
+    name: "Indent wrapped parameter description",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 7,
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_FORMATHEADER,
+    name: "Enable header comment formatting",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 7
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_FORMAT_HEADER,
+    name: "Enable header comment formatting",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 7,
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_FORMATTER_COMMENT,
+    name: "Enable comment formatting",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 7,
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_FORMATTER_COMMENT_CORE,
+    name: "Enable comment formatting",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 7,
+    deprecatedVersion: 11,
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_FORMAT_BLOCK_COMMENTS,
+    name: "Enable block comment formatting",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 11,
+  });
+
+  settings.push({
+    id: SupportedSettings.FORMAT_LINE_COMMENTS,
+    name: "Enable line comment formatting",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 11,
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_COUNT_LINE_LENGTH_FROM_STARTING_POSITION,
+    name: "Count line length from starting position",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 13,
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_CLEARBLANKLINES,
+    name: "Clear blank lines in comment",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 7
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_CLEAR_BLANK_LINES,
+    name: "Clear blank lines in comment",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 7,
+    deprecatedVersion: 11
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_CLEAR_BLANK_LINES_IN_JAVADOC_COMMENT,
+    name: "Remove blank lines in Javadoc",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 11,
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_CLEAR_BLANK_LINES_IN_BLOCK_COMMENT,
+    name: "Remove blank lines in block comment",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 11,
+  });
+
+  settings.push({
+    id: SupportedSettings.COMMENT_ON_OFF_TAGS,
+    name: "Use On/Off tags",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Comment,
+    exampleKind: ExampleKind.COMMENT_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_SPACE_BEFORE_CLOSING_BRACE_IN_ARRAY_INITIALIZER,
+    name: "Before closing brace in array initializer",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Whitespace,
+    exampleKind: ExampleKind.WHITESPACE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_SPACE_BEFORE_FIRST_INITIALIZER,
+    name: "Before first initializer",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Whitespace,
+    exampleKind: ExampleKind.WHITESPACE_EXAMPLE,
+    startVersion: 1,
+    deprecatedVersion: 3,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_SPACE_AFTER_OPENING_BRACE_IN_ARRAY_INITIALIZER,
+    name: "After opening brace in array initializer",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Whitespace,
+    exampleKind: ExampleKind.WHITESPACE_EXAMPLE,
+    startVersion: 3,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_SPACE_AFTER_CLOSING_PAREN_IN_CAST,
+    name: "After closing parenthesis in cast",
+    valueKind: ValueKind.Boolean,
+    value: "true",
+    catagory: Catagory.Whitespace,
+    exampleKind: ExampleKind.WHITESPACE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  settings.push({
+    id: SupportedSettings.INSERT_SPACE_AFTER_CLOSING_ANGLE_BRACKET_IN_TYPE_ARGUMENTS,
+    name: "After closing angle bracket in type",
+    valueKind: ValueKind.Boolean,
+    value: "false",
+    catagory: Catagory.Whitespace,
+    exampleKind: ExampleKind.WHITESPACE_EXAMPLE,
+    startVersion: 1,
+  });
+
+  const supportedSettings: JavaFormatterSetting[] = [];
+  for (const setting of settings) {
+    if (setting.startVersion <= version && (!setting.deprecatedVersion || setting.deprecatedVersion > version)) {
+      supportedSettings.push(setting);
+    }
+  }
+  return supportedSettings;
 }

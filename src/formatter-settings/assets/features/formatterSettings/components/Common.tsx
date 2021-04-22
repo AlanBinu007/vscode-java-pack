@@ -3,14 +3,16 @@
 
 import React from "react";
 import { useSelector } from "react-redux";
-import { Catagory, JavaFormatterSetting } from "../../../../FormatterConstants";
+import { Catagory, JavaFormatterSetting } from "../../../../types";
 import Setting from "./Setting";
 
 const Common = (): JSX.Element => {
   const settings: JavaFormatterSetting[] = useSelector((state: any) => state.formatterSettings.settings);
 
   return (
-    <Setting setting={settings} catagory={Catagory.Common}/>
+    <div>
+      <Setting setting={settings} catagory={Catagory.Common} />
+    </div>
   );
 };
 

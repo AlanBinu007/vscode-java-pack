@@ -4,14 +4,10 @@
 import checkIcon from "@iconify-icons/codicon/check";
 import chevronDownIcon from "@iconify-icons/codicon/chevron-down";
 import { Icon } from "@iconify/react";
-import { Dispatch } from "@reduxjs/toolkit";
 import React from "react";
 import { Dropdown, Form } from "react-bootstrap";
-import { useDispatch } from "react-redux";
-import { Catagory, JavaFormatterSetting, ValueKind } from "../../../../FormatterConstants";
+import { Catagory, JavaFormatterSetting, ValueKind } from "../../../../types";
 import { changeSetting } from "../../../vscode.api";
-import { formatterConverter } from "../FormatterConverter";
-import { updateSetting } from "../formatterSettingViewSlice";
 
 export interface SettingProps {
   setting: JavaFormatterSetting[];
@@ -21,12 +17,9 @@ export interface SettingProps {
 
 const Setting = (prop: SettingProps): JSX.Element => {
 
-  const dispatch: Dispatch<any> = useDispatch();
-
   const handleChangeCheckbox = (e: any) => {
     const id = e.target.id;
     const value = (e.target.checked === true) ? "true" : "false";
-    dispatch(updateSetting({ id: id, value: formatterConverter.valueConvert(id, value) }));
     changeSetting(id, value);
   };
 
@@ -36,12 +29,10 @@ const Setting = (prop: SettingProps): JSX.Element => {
     if (!value || value === "") {
       value = "0";
     }
-    dispatch(updateSetting({ id: id, value: value }));
     changeSetting(id, value);
   };
 
   const handleSelect = (setting: JavaFormatterSetting, entry: string) => {
-    dispatch(updateSetting({ id: setting.id, value: entry }));
     changeSetting(setting.id, entry);
   };
 
@@ -67,7 +58,7 @@ const Setting = (prop: SettingProps): JSX.Element => {
         );
       case ValueKind.Enum:
         if (!setting.candidates) {
-          return (<div></div>);
+          return (null);
         }
         for (const candidate of setting.candidates) {
           candidates.push(
@@ -103,13 +94,13 @@ const Setting = (prop: SettingProps): JSX.Element => {
   };
 
   if (!prop.setting) {
-    return <div></div>;
+    return (null);
   }
   const result = prop.setting.map((value, _index) => {
     if (value.catagory === prop.catagory) {
       return generateSettingsLeaf(value);
     }
-    return <div></div>;
+    return (null);
   });
   return (
     <div className="setting">{result}</div>

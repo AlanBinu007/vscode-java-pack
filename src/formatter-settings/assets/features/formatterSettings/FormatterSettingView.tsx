@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { Col, Container, Nav, Row } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { Dispatch } from "@reduxjs/toolkit";
-import { Catagory, ExampleManager } from "../../../FormatterConstants";
+import { ExampleManager } from "../../../FormatterConstants";
 import Header from "./components/Header";
 import Common from "./components/Common";
 import WhiteSpace from "./components/WhiteSpace";
@@ -13,8 +13,9 @@ import BlankLine from "./components/BlankLine";
 import Comment from "./components/Comment";
 import Wrapping from "./components/Wrapping";
 import NewLine from "./components/NewLine";
-import { changeActiveCatagory, applyFormatResult, initSetting, initVersion } from "./formatterSettingViewSlice";
+import { changeActiveCatagory, applyFormatResult, initSetting, changeSetting } from "./formatterSettingViewSlice";
 import { Highlighter } from "./utils/Highlight";
+import { Catagory } from "../../../types";
 
 const FormatterSettingsView = (): JSX.Element => {
   const activeCatagory: Catagory = useSelector((state: any) => state.formatterSettings.activeCatagory);
@@ -78,9 +79,9 @@ const FormatterSettingsView = (): JSX.Element => {
       dispatch(applyFormatResult(event.data));
     } else if (event.data.command === "VSCodeToWebview.initSetting") {
       dispatch(initSetting(event.data));
-    } else if (event.data.command === "VSCodeToWebview.initVersion") {
-      dispatch(initVersion(event.data));
-    }
+    } else if (event.data.command === "VSCodeToWebview.changeSetting") {
+      dispatch(changeSetting(event.data));
+    } 
   };
 
   useEffect(() => {

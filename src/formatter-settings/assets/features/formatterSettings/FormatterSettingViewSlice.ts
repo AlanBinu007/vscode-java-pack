@@ -2,9 +2,9 @@
 // Licensed under the MIT license.
 
 import { createSlice } from "@reduxjs/toolkit";
-import { Catagory, ExampleKind, JavaFormatterSetting } from "../../../FormatterConstants";
-import { initializeSupportedSettings } from "./SupportedSettings";
-import { applyChanges, changeExampleKind } from "../../vscode.api";
+import { SupportedSettings } from "../../../FormatterConstants";
+import { Catagory, ExampleKind, JavaFormatterSetting } from "../../../types";
+import { changeExampleKind } from "../../vscode.api";
 
 export const formatterSettingsViewSlice = createSlice({
   name: "formatterSettings",
@@ -12,10 +12,8 @@ export const formatterSettingsViewSlice = createSlice({
     activeCatagory: Catagory.Common,
     activePreviewExampleKind: ExampleKind.COMMON_EXAMPLE,
     settings: [] as JavaFormatterSetting[],
-    version: 21,
     exampleKind: ExampleKind.COMMON_EXAMPLE,
     formattedContent: "",
-    settingsChanged: false,
     format: false,
   },
   reducers: {
@@ -53,46 +51,38 @@ export const formatterSettingsViewSlice = createSlice({
       }
       state.format = false;
     },
-    initVersion: (state, action) => {
-      state.version = Number(action.payload.version);
-      state.settings = initializeSupportedSettings(state.version);
-    },
     initSetting: (state, action) => {
+      for (const setting of state.settings) {
+        if (setting.id === action.payload.setting.id) {
+          return;
+        }
+      }
+      state.settings.push(action.payload.setting);
+    },
+    changeSetting: (state, action) => {
       for (const setting of state.settings) {
         if (setting.id === action.payload.id) {
           setting.value = action.payload.value;
           break;
         }
       }
-    },
-    updateSetting: (state, action) => {
-      state.settingsChanged = true;
-      for (const setting of state.settings) {
-        if (setting.id === action.payload.id) {
-          setting.value = action.payload.value;
-          break;
-        }
+      if (action.payload.id === SupportedSettings.TABULATION_SIZE) {
+        document.documentElement.style.setProperty("--vscode-tab-size", action.payload.value);
       }
     },
     applyFormatResult: (state, action) => {
       state.formattedContent = action.payload.content;
       state.format = true;
-    },
-    applySettingChange: (state, _action) => {
-      state.settingsChanged = false;
-      applyChanges();
-    },
+    }
   },
 });
 
 export const {
   changeActiveCatagory,
   changePreviewExample,
-  initVersion,
   initSetting,
-  updateSetting,
+  changeSetting,
   applyFormatResult,
-  applySettingChange,
 } = formatterSettingsViewSlice.actions;
 
 export default formatterSettingsViewSlice.reducer;

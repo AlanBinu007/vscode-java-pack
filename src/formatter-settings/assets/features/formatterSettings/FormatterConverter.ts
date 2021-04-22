@@ -4,9 +4,9 @@
 import { SupportedSettings } from "../../../FormatterConstants";
 
 class FormatterConverter {
-    public valueConvert(setting: string, value: string): string {
+    public valueConvert(id: string, value: string): string {
         let valueString: string = value;
-        switch (setting) {
+        switch (id) {
             case SupportedSettings.INSERT_SPACE_BEFORE_FIRST_INITIALIZER:
             case SupportedSettings.INSERT_SPACE_AFTER_CLOSING_ANGLE_BRACKET_IN_TYPE_ARGUMENTS:
             case SupportedSettings.INSERT_SPACE_AFTER_CLOSING_PAREN_IN_CAST:
