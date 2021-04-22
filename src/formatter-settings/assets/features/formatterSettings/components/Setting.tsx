@@ -85,7 +85,7 @@ const Setting = (prop: SettingProps): JSX.Element => {
         return (
           <div className="setting-section">
             <Form.Label className="setting-section-description">{setting.name}.</Form.Label>
-            <Form.Control className="pl-1 mt-1" type="number" id={setting.id} defaultValue={setting.value} onChange={handleChangeInput}></Form.Control>
+            <Form.Control className="pl-1 mt-1" type="number" id={setting.id} value={setting.value} onChange={handleChangeInput}></Form.Control>
           </div>
         );
       default:
