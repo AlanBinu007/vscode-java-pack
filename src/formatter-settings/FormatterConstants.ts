@@ -217,12 +217,7 @@ export class ExampleManager {
     "\n" +
     "class Example {\n" +
     "\tint[] myArray = { 1, 2, 3, 4, 5, 6 };\n" +
-    "\tString stringWithTabs = \"1	2	3	4\";\n" +
-    "\tString textBlock = \"\"\"\n" +
-    "first line\n" +
-    "\n" +
-    "second line\n" +
-    "\"\"\";\n" +
+    "\tString strWithTabs = \"1	2	3	4\";\n" +
     "}\n";
 
   private static BLANKLINE_EXAMPLE = "package com.example;\n" +

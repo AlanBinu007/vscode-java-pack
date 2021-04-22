@@ -121,7 +121,7 @@ const FormatterSettingsView = (): JSX.Element => {
         <Col className="flex-grow-1 d-flex setting-and-preview">
           <Row className="flex-nowrap flex-column flex-lg-row d-flex setting-content">
             <Col className="flex-grow-0 setting-container d-flex flex-row flex-lg-column flex-lg-nowrap">{content}</Col>
-            <Col className="flex-grow-1 preview d-flex">{Highlighter(contentText)}</Col>
+            <Col className="flex-grow-1 preview d-flex">{Highlighter(contentText, "java")}</Col>
           </Row>
         </Col>
       </Row>

@@ -306,11 +306,19 @@ code.hljs {
 
 .hljs {
   font-size: medium;
+  font-family: SpaceDiff, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   tab-size: var(--vscode-tab-size);
   overflow: hidden !important;
   &:hover {
     overflow: auto !important;
   }
+  
+}
+
+@font-face {
+  font-family: SpaceDiff;
+  
+  src: url('./SpaceDiff.woff2')
 }
 
 .content {

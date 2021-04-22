@@ -187,14 +187,6 @@ export class JavaFormatterSettingsEditorProvider implements vscode.CustomTextEdi
         }
 
         await this.inheritVSCodeSettings(webviewPanel);
-
-        webviewPanel.onDidChangeViewState(async (e) => {
-            if (e.webviewPanel === webviewPanel && e.webviewPanel.visible === true) {
-                this.initSetting(webviewPanel, false);
-                this.initSetting(webviewPanel, true);
-            }
-        });
-
         webviewPanel.webview.options = {
             enableScripts: true,
             enableCommandUris: true,
