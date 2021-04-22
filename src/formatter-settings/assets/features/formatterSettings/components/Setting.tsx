@@ -58,7 +58,7 @@ const Setting = (prop: SettingProps): JSX.Element => {
         );
       case ValueKind.Enum:
         if (!setting.candidates) {
-          return (null);
+          return (<></>);
         }
         for (const candidate of setting.candidates) {
           candidates.push(
@@ -94,13 +94,13 @@ const Setting = (prop: SettingProps): JSX.Element => {
   };
 
   if (!prop.setting) {
-    return (null);
+    return (<></>);
   }
   const result = prop.setting.map((value, _index) => {
     if (value.catagory === prop.catagory) {
       return generateSettingsLeaf(value);
     }
-    return (null);
+    return (<></>);
   });
   return (
     <div className="setting">{result}</div>
